@@ -1,3 +1,6 @@
 import sys
 sys.path.append("..")
-from .ada import Ada
+from .sgd import SGD
+from .adagrad import AdaGrad
+from .adam import Adam
+from .rmsprop import RMSProp
