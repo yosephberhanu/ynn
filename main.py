@@ -1,3 +1,4 @@
+from loss import SoftmaxCategoricalCrossEntropy
 from loss import CategoricalCrossEntropy
 from layers import Dense
 from activation import Softmax, ReLU
@@ -15,9 +16,7 @@ activation1 = ReLU()
 
 layer2 = Dense(3,3)
 
-activation2 = Softmax()
-
-loss = CategoricalCrossEntropy()
+scce = SoftmaxCategoricalCrossEntropy()
 
 layer1.forward(X)
 
@@ -25,8 +24,17 @@ activation1.forward(layer1.output)
 
 layer2.forward(activation1.output)
 
-activation2.forward(layer2.output)
+scce.forward(layer2.output, y)
+print(scce.output[:5])
 
-print(loss.calculate(activation2.output, y))
-# This also works 
-# print(loss.calculate(activation2.output, one_hot(y)))
+
+scce.backward(scce.output, y)
+layer2.backward(scce.dinputs)
+activation1.backward(layer2.dinputs)
+layer1.backward(activation1.dinputs)
+
+# Print gradients
+print(layer1.dweights)
+print(layer1.dbiases)
+print(layer2.dweights)
+print(layer2.dbiases)

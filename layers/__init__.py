@@ -1,4 +1,3 @@
-if __name__ == "__main__":
-	from dense import Dense
-else:
-	from .dense import Dense
+import sys
+sys.path.append("..")
+from .dense import Dense

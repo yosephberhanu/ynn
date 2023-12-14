@@ -1,5 +1,7 @@
 import numpy as np
-class CategoricalCrossEntropy:
+from .loss import Loss
+
+class CategoricalCrossEntropy(Loss):
 	# Perform the forward pass
 	def calculate(self, y_pred, y_true):
 		# Clip the predicted values in y_pred to be in the range 1e-7, 1 - 1e-7
@@ -17,6 +19,21 @@ class CategoricalCrossEntropy:
 		# Calculate average negative log of the entropy values
 		return np.mean(-np.log(entorpy))
 	
+	def backward(self, dvalues, y_true):
+		# Number of samples
+		samples = len(dvalues)
+		# Number of labels in every sample, We'll use the first sample to count them
+		labels = len(dvalues[0])
+
+		# If labels are sparse, turn them into one-hot vector
+		if len(y_true.shape) == 1:
+			y_true = np.eye(labels)[y_true]
+
+		# Calculate gradient
+		self.dinputs = -y_true / dvalues
+		# Normalize gradient
+		self.dinputs = self.dinputs / samples
+
 if __name__ == "__main__":
 	loss = CategoricalCrossEntropy()
 	y_pred = np.array([[0.7, 0.1, 0.2],

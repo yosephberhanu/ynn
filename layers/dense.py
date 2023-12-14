@@ -9,4 +9,14 @@ class Dense:
 	
 	# Perform the forward pass
 	def forward(self, inputs):
+		# Remember input values for backpropagation
+		self.inputs = inputs
 		self.output = np.dot(inputs, self.weights) + self.bias
+	
+	# Perform the backward pass
+	def backward(self, dvalues):
+		# Gradients on parameters
+		self.dweights = np.dot(self.inputs.T, dvalues)
+		self.dbiases = np.sum(dvalues, axis = 0, keepdims = True)
+		# Gradient on values
+		self.dinputs = np.dot(dvalues, self.weights.T)
